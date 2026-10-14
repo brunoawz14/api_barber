@@ -1,5 +1,6 @@
 package com.bruno.api.barber.Service;
 
+import com.bruno.api.barber.Dto.ClienteRespose;
 import com.bruno.api.barber.Entity.Cliente;
 import com.bruno.api.barber.Repository.ClienteRepository;
 import jakarta.persistence.EntityNotFoundException;
@@ -16,8 +17,15 @@ public class ClienteService {
         this.clienteRepository = clienteRepository;
     }
 
-    public List<Cliente> listarTodos() {
-        return clienteRepository.findAll();
+    public List<ClienteRespose> listarTodos() {
+        return clienteRepository.findAll()
+                .stream()
+                .map(cliente -> new ClienteRespose(
+                        cliente.getId(),
+                        cliente.getNome(),
+                        cliente.getEmail()
+                ))
+                .toList();
     }
 
     public Cliente findById(Long id) {
@@ -29,4 +37,20 @@ public class ClienteService {
     public Cliente salvar(Cliente cliente) {
         return clienteRepository.save(cliente);
     }
+
+
+    public Cliente atualizar(Long id, Cliente dados) {
+        Cliente cliente = clienteRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Cliente não encontrado"));
+
+        cliente.setNome(dados.getNome());
+        cliente.setEmail(dados.getEmail());
+        cliente.setTelefone(dados.getTelefone());
+
+        return clienteRepository.save(cliente);
+
+
+
+    }
+
 }

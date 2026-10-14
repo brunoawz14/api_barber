@@ -1,5 +1,6 @@
 package com.bruno.api.barber.Controller;
 
+import com.bruno.api.barber.Dto.ClienteRespose;
 import com.bruno.api.barber.Entity.Cliente;
 import com.bruno.api.barber.Service.ClienteService;
 import org.springframework.http.ResponseEntity;
@@ -18,7 +19,7 @@ public class ClienteController {
     }
 
     @GetMapping
-    public ResponseEntity<List<Cliente>> listarTodos() {
+    public ResponseEntity<List<ClienteRespose>> listarTodos() {
         return ResponseEntity.ok(clienteService.listarTodos());
     }
 
@@ -33,6 +34,16 @@ public class ClienteController {
         Cliente clienteId = clienteService.findById(id);
 
         return ResponseEntity.status(201).body(clienteId);
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<Cliente> atualizar(
+            @PathVariable Long id,
+            @RequestBody Cliente cliente) {
+
+        Cliente atualizado = clienteService.atualizar(id, cliente);
+
+        return ResponseEntity.ok(atualizado);
     }
 
 
